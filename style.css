@@ -1,0 +1,39 @@
+:root {
+    --main-color: violet;
+
+    --color: black;
+    --secondary-color:white;
+    --background-page: rgb(0, 0, 34);
+    --background-game: rgb(31, 63, 153);
+}
+
+body {
+    color:var(--secondary-color);
+    margin: 0; padding: 0;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Geomanist', 'Roboto', sans-serif;
+
+    background-color: var(--background-page);
+}
+
+#gameBoard {
+    background-color: var(--background-game);
+    border: 1px solid black;
+    border-radius: 12px;
+    width:500px;
+    height: 500px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.spot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 5rem;
+}
