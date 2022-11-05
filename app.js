@@ -1,19 +1,36 @@
 
 const GameFlow = (() => {
+    let turn = 0;
+    const numberOfPlayers = []
 
+    const getTurn = () => turn
+    const changeTurns = () => {
+        turn = turn === 0 ? 1 : 0;
+    }
+    const addPlayer = (player) => {
+        numberOfPlayers.push(player);
+        console.log("Added player: " + player.name)
+    }
+    const getPlayer = () => {
+        return numberOfPlayers[turn];
+    }
+    return {
+        getTurn, changeTurns, addPlayer, getPlayer
+    }
 })()
 
 const GameBoard = (() => {
     const gameBoard = Array.from(document.querySelectorAll('#gameBoard>div'))
     const spots = [
-        '', 'o', 'x',
-        'o', 'o', 'x',
-        'x', 'x', 'o',
+        '', '', '',
+        '', '', '',
+        '', '', '',
     ];
 
-    gameBoard.forEach((spot) => {
+    gameBoard.forEach((spot, index) => {
         spot.addEventListener('click', () =>{
             console.log('clicked ' + spot.getAttribute('id'))
+            addSpot(index, GameFlow.getPlayer().getMarker())
             return this
         })
     })
@@ -22,6 +39,7 @@ const GameBoard = (() => {
         if (spots[place] === '') {
             spots[place] = marker;
             render();
+            GameFlow.changeTurns();
         } else {
             console.log('this place is taken!')
         }
@@ -59,6 +77,10 @@ const Player = (marker) => {
 };
 
 const playerOne = Player('x');
+playerOne.name = 'Will'
 const playerTwo = Player('o');
+playerTwo.name = 'Leonard'
+GameFlow.addPlayer(playerOne)
+GameFlow.addPlayer(playerTwo)
 
 GameBoard.render();
