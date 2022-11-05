@@ -6,7 +6,7 @@
     --background-page: rgb(0, 0, 34);
     --background-game: rgb(31, 63, 153);
 
-    --spot:red;
+    --spot:purple;
     --light-spot: rgb(255, 101, 101);
 }
 
@@ -50,4 +50,9 @@ body {
     transform: scale(1.08);
     background-color: var(--light-spot);
     z-index: 100;
+}
+
+.spot img {
+    height: 150px;
+    width: auto;
 }

@@ -1,21 +1,21 @@
 
 const GameFlow = (() => {
     let turn = 0;
-    const numberOfPlayers = []
+    const players = []
 
     const getTurn = () => turn
     const changeTurns = () => {
         turn = turn === 0 ? 1 : 0;
     }
     const addPlayer = (player) => {
-        numberOfPlayers.push(player);
+        players.push(player);
         console.log("Added player: " + player.name)
     }
-    const getPlayer = () => {
-        return numberOfPlayers[turn];
-    }
+    const getPlayers = () => players
+    const getPlayerByTurn = () => players[turn]; 
+    const getPlayerById = (id) => players.find(x => x.getId() === id)
     return {
-        getTurn, changeTurns, addPlayer, getPlayer
+        getTurn, changeTurns, addPlayer, getPlayers, getPlayerByTurn, getPlayerById
     }
 })()
 
@@ -28,38 +28,43 @@ const GameBoard = (() => {
     ];
 
     gameBoard.forEach((spot, index) => {
-        spot.addEventListener('click', () =>{
+        spot.addEventListener('click', () => {
             console.log('clicked ' + spot.getAttribute('id'))
-            addSpot(index, GameFlow.getPlayer().getMarker())
-            return this
+            addSpot(index, GameFlow.getPlayerByTurn().getId())
         })
     })
 
-    const addSpot = (place, marker) => {
+    const addSpot = (place, id) => {
         if (spots[place] === '') {
-            spots[place] = marker;
+            spots[place] = id;
             render();
             GameFlow.changeTurns();
+            console.log(`${GameFlow.getPlayerByTurn().name} turn`)
         } else {
             console.log('this place is taken!')
         }
     }
 
-    const render = () =>{
-        gameBoard.forEach((spot,index) => {
-            spot.innerHTML = `${spots[index]}`
+    const render = () => { 
+        gameBoard.forEach((spot, index) => {
+            if (spots[index] !== '') {
+                spot.innerHTML = `<img src="${GameFlow.getPlayerById(spots[index]).getMarker()}">`
+            }
         })
     }
     const getGameBoard = () => gameBoard
+    const getSpots = () => spots
     return {
-        addSpot, render, getGameBoard
+        addSpot, render, getGameBoard, getSpots
     }
 })()
 
-const Player = (marker) => {
+const Player = (id, marker) => {
+    id: id;
     marker: marker;
     let score = 0;
 
+    const getId = () => id;
     const getMarker = () => marker;
     const getScore = () => score;
 
@@ -67,18 +72,18 @@ const Player = (marker) => {
         let gameBoard = GameBoard.getGameBoard();
         let index = 0;
 
-        console.log('Placing ' + marker + ' at ' + index)
-        GameBoard.addSpot(index , marker)
+        console.log('Placing ' + id + ' at ' + index)
+        GameBoard.addSpot(index, id)
     }
 
     return {
-        getMarker, getScore, placeMarker
+        getId, getMarker, getScore, placeMarker
     }
 };
 
-const playerOne = Player('x');
+const playerOne = Player(0, 'images/x.png');
 playerOne.name = 'Will'
-const playerTwo = Player('o');
+const playerTwo = Player(1, 'images/o.png');
 playerTwo.name = 'Leonard'
 GameFlow.addPlayer(playerOne)
 GameFlow.addPlayer(playerTwo)
