@@ -5,6 +5,9 @@
     --secondary-color:white;
     --background-page: rgb(0, 0, 34);
     --background-game: rgb(31, 63, 153);
+
+    --spot:red;
+    --light-spot: rgb(255, 101, 101);
 }
 
 body {
@@ -35,5 +38,16 @@ body {
     align-items: center;
     justify-content: center;
 
+    cursor: pointer;
     font-size: 5rem;
+    border: 2px solid black;
+    background-color: var(--spot);
+
+    transition: 0.3s;
+}
+
+.spot:hover {
+    transform: scale(1.08);
+    background-color: var(--light-spot);
+    z-index: 100;
 }
