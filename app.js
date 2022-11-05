@@ -19,6 +19,8 @@ const GameFlow = (() => {
     const endGame = (result) => {
         if (result === 'tie') {
             console.log('Game Tie!')
+        } else if (result === 'win') {
+            console.log('Game wom!')
         }
         endGameScreen.classList.add('active');
         opacityElements.style.opacity = '30%';
@@ -35,9 +37,9 @@ const GameFlow = (() => {
 const GameBoard = (() => {
     const gameBoard = Array.from(document.querySelectorAll('#gameBoard>div'))
     const spots = [
-        '', '', '',
-        '', '', '',
-        '', '', '',
+        ['x', 'x', 'x'],
+        ['', '', ''],
+        ['', '', '']
     ];
 
     gameBoard.forEach((spot, index) => {
@@ -69,14 +71,23 @@ const GameBoard = (() => {
             }
         })
         //CHECK ENDGAME
-        if (spots.every(x => x!=='')) {
+        checkWin();
+    }
+
+    const checkWin = () => {
+        if (spots.every(x => (x.every(a => a!==''))) ) {
+            console.log('tie')
             GameFlow.endGame('tie');
+        }
+        if (spots[0] === spots[3] === spots[6]) {
+            GameFlow.endGame('win');
         }
     }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
     return {
-        addSpot, render, getGameBoard, getSpots, restartBoard
+        addSpot, render, getGameBoard, getSpots, restartBoard,
+        checkWin
     }
 })()
 
