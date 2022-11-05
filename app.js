@@ -1,8 +1,13 @@
 
 const GameFlow = (() => {
+    const endGameScreen = document.querySelector('#endGameScreen');
+    const opacityElements = document.querySelector('.opacityElements');
     let turn = 0;
     const players = []
 
+    const restartGame = () => {
+        turn = 0;
+    }
     const getTurn = () => turn
     const changeTurns = () => {
         turn = turn === 0 ? 1 : 0;
@@ -11,11 +16,19 @@ const GameFlow = (() => {
         players.push(player);
         console.log("Added player: " + player.name)
     }
+    const endGame = (result) => {
+        if (result === 'tie') {
+            console.log('Game Tie!')
+        }
+        endGameScreen.classList.add('active');
+        opacityElements.style.opacity = '30%';
+    }
     const getPlayers = () => players
     const getPlayerByTurn = () => players[turn]; 
     const getPlayerById = (id) => players.find(x => x.getId() === id)
     return {
-        getTurn, changeTurns, addPlayer, getPlayers, getPlayerByTurn, getPlayerById
+        restartGame, getTurn, changeTurns, addPlayer, endGame, 
+        getPlayers, getPlayerByTurn, getPlayerById
     }
 })()
 
@@ -34,6 +47,10 @@ const GameBoard = (() => {
         })
     })
 
+    const restartBoard = () => {
+        spots.forEach((spot, place) => spots[place] = '')
+        render();
+    }
     const addSpot = (place, id) => {
         if (spots[place] === '') {
             spots[place] = id;
@@ -51,17 +68,19 @@ const GameBoard = (() => {
                 spot.innerHTML = `<img src="${GameFlow.getPlayerById(spots[index]).getMarker()}">`
             }
         })
+        //CHECK ENDGAME
+        if (spots.every(x => x!=='')) {
+            GameFlow.endGame('tie');
+        }
     }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
     return {
-        addSpot, render, getGameBoard, getSpots
+        addSpot, render, getGameBoard, getSpots, restartBoard
     }
 })()
 
 const Player = (id, marker) => {
-    id: id;
-    marker: marker;
     let score = 0;
 
     const getId = () => id;

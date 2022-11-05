@@ -7,7 +7,7 @@
     --background-game: rgb(31, 63, 153);
 
     --spot:purple;
-    --light-spot: rgb(255, 101, 101);
+    --light-spot: rgb(206, 101, 255);
 }
 
 body {
@@ -21,6 +21,15 @@ body {
     background-color: var(--background-page);
 }
 
+.header {
+    display:flex;
+    justify-content: center;
+}
+
+.opacityElements {
+    transition: 0.5s;
+}
+
 #gameBoard {
     background-color: var(--background-game);
     border: 1px solid black;
@@ -31,6 +40,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
+
 }
 
 .spot {
@@ -55,4 +65,23 @@ body {
 .spot img {
     height: 150px;
     width: auto;
+}
+
+#endGameScreen {
+    border: 1px solid black;
+    border-radius: 12px;
+    background-color: var(--background-game);
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 0.3s ease-in-out;
+}
+#endGameScreen.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+.endMessage {
+    display:flex;
+    justify-content: center;
 }
