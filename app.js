@@ -19,43 +19,79 @@ const GameFlow = (() => {
     const endGame = (result) => {
         if (result === 'tie') {
             console.log('Game Tie!')
-        } else if (result === 'win') {
-            console.log('Game wom!')
+        } else {
+            const victoriousPlayer = getPlayerById(result);
+            console.log(`${victoriousPlayer.name} won the game!`)
         }
         endGameScreen.classList.add('active');
         opacityElements.style.opacity = '30%';
     }
     const getPlayers = () => players
-    const getPlayerByTurn = () => players[turn]; 
+    const getPlayerByTurn = () => players[turn];
     const getPlayerById = (id) => players.find(x => x.getId() === id)
     return {
-        restartGame, getTurn, changeTurns, addPlayer, endGame, 
+        restartGame, getTurn, changeTurns, addPlayer, endGame,
         getPlayers, getPlayerByTurn, getPlayerById
     }
 })()
 
 const GameBoard = (() => {
-    const gameBoard = Array.from(document.querySelectorAll('#gameBoard>div'))
+    let board = document.querySelector('#gameBoard')
+    let gameBoard = [];
     const spots = [
-        ['x', 'x', 'x'],
+        ['', '', ''],
         ['', '', ''],
         ['', '', '']
     ];
 
-    gameBoard.forEach((spot, index) => {
-        spot.addEventListener('click', () => {
-            console.log('clicked ' + spot.getAttribute('id'))
-            addSpot(index, GameFlow.getPlayerByTurn().getId())
-        })
-    })
+    const getPosition = (position) => {
 
-    const restartBoard = () => {
-        spots.forEach((spot, place) => spots[place] = '')
+    }
+    const createBoard = () => {
+        for (let row = 0; row < 3; row++) {
+            const rowArray = [];
+            for (let col = 0; col < 3; col++) {
+                const addedSpot = document.createElement('div');
+                addedSpot.classList.add('spot')
+                const id = `spot-${row}-${col}`
+                addedSpot.setAttribute('id', id)
+                board.appendChild(addedSpot)
+
+                rowArray.push(addedSpot);
+            }
+            gameBoard.push(rowArray);
+        }
+        //CREATE THE GAMEBOARD AND ASSIGN CLICK EVENT of ADDSPOT
+        gameBoard.forEach((row, rowIndex) => {
+            row.forEach((column, columnIndex) => {
+                column.addEventListener('click', () => {
+                    console.log(`clicked ${column.getAttribute('id')} index: ${rowIndex}-${columnIndex}`)
+                    addSpot(rowIndex, columnIndex, GameFlow.getPlayerByTurn().getId())
+                })
+            })
+        })
+    }
+
+    const render = () => {
+        spots.forEach((row, rowIndex) => {
+            row.forEach((column, columnIndex) => {
+                if (column !== '') {
+                    gameBoard[rowIndex][columnIndex].innerHTML = `<img src="${GameFlow.getPlayerById(spots[rowIndex][columnIndex]).getMarker()}">`
+                }
+            })
+        })
+        //CHECK ENDGAME
+        checkWin();
+    }
+
+    const restartBoard = () => { //NOT FUNCTIONAL CURRENT VERSION
+        //spots.forEach((spot, place) => spots[place] = '')
         render();
     }
-    const addSpot = (place, id) => {
-        if (spots[place] === '') {
-            spots[place] = id;
+
+    const addSpot = (row, column, id) => {
+        if (spots[row][column] === '') {
+            spots[row][column] = id;
             render();
             GameFlow.changeTurns();
             console.log(`${GameFlow.getPlayerByTurn().name} turn`)
@@ -64,28 +100,25 @@ const GameBoard = (() => {
         }
     }
 
-    const render = () => { 
-        gameBoard.forEach((spot, index) => {
-            if (spots[index] !== '') {
-                spot.innerHTML = `<img src="${GameFlow.getPlayerById(spots[index]).getMarker()}">`
-            }
-        })
-        //CHECK ENDGAME
-        checkWin();
-    }
-
     const checkWin = () => {
-        if (spots.every(x => (x.every(a => a!==''))) ) {
+        // console.log(`${spots.join('\n')}\n\n`);
+        if (spots.every(x => (x.every(a => a !== '')))) {
             console.log('tie')
             GameFlow.endGame('tie');
+            return
         }
-        if (spots[0] === spots[3] === spots[6]) {
-            GameFlow.endGame('win');
-        }
+        spots.forEach(row => {
+            const mySet = new Set(row); //USE SETS TO CALCULATE WIN
+            if (mySet.size === 1 && row[0] !== '') {
+                console.log(mySet)
+                GameFlow.endGame(row[0]); //returns win and player id
+            }
+        });
     }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
     return {
+        createBoard,
         addSpot, render, getGameBoard, getSpots, restartBoard,
         checkWin
     }
@@ -118,4 +151,5 @@ playerTwo.name = 'Leonard'
 GameFlow.addPlayer(playerOne)
 GameFlow.addPlayer(playerTwo)
 
+GameBoard.createBoard()
 GameBoard.render();
