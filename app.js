@@ -1,12 +1,41 @@
 
 const GameFlow = (() => {
     const endGameScreen = document.querySelector('#endGameScreen');
+    const warningScreen = document.querySelector('#warningScreen');
+    const warningMessage = document.querySelector('#warningMessage');
+    const backWarningButton = document.querySelector('#backWarningButton')
     const fullScreenContainer = document.querySelector('#fsContainer');
+
+    const gameStartForm = document.querySelector('form');
+    const nameOne = document.querySelector('#nameOne');
+    const nameTwo = document.querySelector('#nameTwo');
     let turn = 0;
     const players = []
 
-    const restartGame = () => {
+    gameStartForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        newGame();
+    })
+    backWarningButton.addEventListener('click', () => {
+        warningScreen.classList.remove('active');
+        fullScreenContainer.classList.remove('active');
+    })
+    const newGame = () => {
+        if (nameOne.value.length === 0 || nameTwo.value.length === 0) {
+            warningMessage.textContent = 'You need to put the names!'
+            warningScreen.classList.add('active');
+            fullScreenContainer.classList.add('active');
+            return
+        }
         turn = 0;
+        clearPlayers();
+        const playerOne = Player(0, 'images/x.png');
+        playerOne.name = nameOne.value
+        const playerTwo = Player(1, 'images/o.png');
+        playerTwo.name = nameTwo.value
+        addPlayer(playerOne)
+        addPlayer(playerTwo)
+        GameBoard.restartBoard();
     }
     const getTurn = () => turn
     const changeTurns = () => {
@@ -16,22 +45,29 @@ const GameFlow = (() => {
         players.push(player);
         console.log("Added player: " + player.name)
     }
+    const clearPlayers = (player) => {
+        players.length = 0
+    }
     const endGame = (result) => {
         if (result === 'tie') {
             console.log('Game Tie!')
         } else {
             const victoriousPlayer = getPlayerById(result);
+            players.forEach((player, index) => {
+                if (player.getId() === result) {
+                    players[index].addScore();
+                }
+            })
             console.log(`${victoriousPlayer.name} won the game!`)
         }
         endGameScreen.classList.add('active');
         fullScreenContainer.classList.add('active');
-        //fullScreenContainer.classList.remove('active');
     }
     const getPlayers = () => players
     const getPlayerByTurn = () => players[turn];
     const getPlayerById = (id) => players.find(x => x.getId() === id)
     return {
-        restartGame, getTurn, changeTurns, addPlayer, endGame,
+        newGame, getTurn, changeTurns, addPlayer, endGame,
         getPlayers, getPlayerByTurn, getPlayerById
     }
 })()
@@ -167,6 +203,12 @@ const Player = (id, marker) => {
     const getId = () => id;
     const getMarker = () => marker;
     const getScore = () => score;
+    const setScore = (value) => {
+        this.score = value;
+    }
+    const addScore = () => {
+        this.score += 1;
+    }
 
     const placeMarker = () => {
         let gameBoard = GameBoard.getGameBoard();
@@ -177,7 +219,7 @@ const Player = (id, marker) => {
     }
 
     return {
-        getId, getMarker, getScore, placeMarker
+        getId, getMarker, getScore, setScore, addScore, placeMarker
     }
 };
 
@@ -189,4 +231,4 @@ GameFlow.addPlayer(playerOne)
 GameFlow.addPlayer(playerTwo)
 
 GameBoard.createBoard()
-GameBoard.render();
+//GameBoard.render();

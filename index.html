@@ -24,6 +24,15 @@
             <h1>Tic Tac Toe</h1>
         </div>
         <div class="options">
+            <form action="">
+                <label for="nameOne">Enter Player Name:</label>
+                <input type="text" name="nameOne" id="nameOne">
+
+                <label for="nameTwo">Enter Player Name:</label>
+                <input type="text" name="nameTwo" id="nameTwo">
+
+                <button type="submit">Start</button>
+            </form>
         </div>
         <div id="gameBoard">
 
@@ -39,10 +48,14 @@
                 <div class="spot" id="spot7"></div>
                 <div class="spot" id="spot8"></div> -->
         </div>
-        <div id="endGameScreen">
+        <div class="popUp" id="endGameScreen">
             <div class="endMessage">
                 <h2>Tie Game</h2>
             </div>
+        </div>
+        <div class="popUp" id="warningScreen">
+            <h2 id="warningMessage"></h2>
+            <button id="backWarningButton">Back</button>
         </div>
     </main>
 </body>
