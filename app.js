@@ -101,19 +101,43 @@ const GameBoard = (() => {
     }
 
     const checkWin = () => {
-        // console.log(`${spots.join('\n')}\n\n`);
-        if (spots.every(x => (x.every(a => a !== '')))) {
-            console.log('tie')
-            GameFlow.endGame('tie');
-            return
-        }
+        //CHECK ROWS
         spots.forEach(row => {
             const mySet = new Set(row); //USE SETS TO CALCULATE WIN
             if (mySet.size === 1 && row[0] !== '') {
-                console.log(mySet)
+                console.log('Game won by rows')
                 GameFlow.endGame(row[0]); //returns win and player id
+                return
             }
         });
+        //CHECK DIAGONALS
+        const mySet = new Set();
+        for (let i = 0; i < spots.length; i++) { 
+            mySet.add(spots[i][i])
+            //console.log(mySet)
+        }
+        if (mySet.size === 1 && !mySet.has('')) {
+            console.log('Game won by diagonals')
+            GameFlow.endGame(spots[0][0]); //returns win and player id
+            return
+        }
+        //INVERSE DIAGONALS
+        mySet.clear();
+        for (let i = 0; i < spots.length; i++) { 
+            mySet.add(spots[i][spots.length-i-1])
+            //console.log(mySet)
+        }
+        if (mySet.size === 1 && !mySet.has('')) {
+            console.log('Game won by inverse diagonals')
+            GameFlow.endGame(spots[0][spots.length-1]); //returns win and player id
+            return
+        }
+        //TIE CHECK
+        if (spots.every(x => (x.every(a => a !== '')))) {
+            console.log('Game Tie')
+            GameFlow.endGame('tie');
+            return
+        }
     }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
