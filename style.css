@@ -24,10 +24,22 @@ body {
 .header {
     display:flex;
     justify-content: center;
+    letter-spacing: 5px;
 }
 
-.opacityElements {
-    transition: 0.5s;
+
+.fullscreen-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+}
+.fullscreen-container.active {
+    display:block;
 }
 
 #gameBoard {

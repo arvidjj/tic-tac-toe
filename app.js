@@ -1,7 +1,7 @@
 
 const GameFlow = (() => {
     const endGameScreen = document.querySelector('#endGameScreen');
-    const opacityElements = document.querySelector('.opacityElements');
+    const fullScreenContainer = document.querySelector('#fsContainer');
     let turn = 0;
     const players = []
 
@@ -24,7 +24,8 @@ const GameFlow = (() => {
             console.log(`${victoriousPlayer.name} won the game!`)
         }
         endGameScreen.classList.add('active');
-        opacityElements.style.opacity = '30%';
+        fullScreenContainer.classList.add('active');
+        //fullScreenContainer.classList.remove('active');
     }
     const getPlayers = () => players
     const getPlayerByTurn = () => players[turn];
@@ -44,9 +45,6 @@ const GameBoard = (() => {
         ['', '', '']
     ];
 
-    const getPosition = (position) => {
-
-    }
     const createBoard = () => {
         for (let row = 0; row < 3; row++) {
             const rowArray = [];
@@ -77,6 +75,8 @@ const GameBoard = (() => {
             row.forEach((column, columnIndex) => {
                 if (column !== '') {
                     gameBoard[rowIndex][columnIndex].innerHTML = `<img src="${GameFlow.getPlayerById(spots[rowIndex][columnIndex]).getMarker()}">`
+                } else {
+                    gameBoard[rowIndex][columnIndex].innerHTML = ``
                 }
             })
         })
@@ -85,7 +85,9 @@ const GameBoard = (() => {
     }
 
     const restartBoard = () => { //NOT FUNCTIONAL CURRENT VERSION
-        //spots.forEach((spot, place) => spots[place] = '')
+        spots.forEach((row, place) => {
+            spots[place] = ['', '', ''];
+        })
         render();
     }
 
@@ -101,33 +103,44 @@ const GameBoard = (() => {
     }
 
     const checkWin = () => {
+        const winCheckSet = new Set(); //USE SETS TO CALCULATE WIN
         //CHECK ROWS
         spots.forEach(row => {
-            const mySet = new Set(row); //USE SETS TO CALCULATE WIN
-            if (mySet.size === 1 && row[0] !== '') {
+            const winCheckSet = new Set(row); 
+            if (winCheckSet.size === 1 && row[0] !== '') {
                 console.log('Game won by rows')
                 GameFlow.endGame(row[0]); //returns win and player id
                 return
             }
         });
-        //CHECK DIAGONALS
-        const mySet = new Set();
-        for (let i = 0; i < spots.length; i++) { 
-            mySet.add(spots[i][i])
-            //console.log(mySet)
+        //CHECK COLUMNS
+        for (let i = 0; i < spots.length; i++){ 
+            winCheckSet.clear(); //clear win set to check next column
+            for (let o = 0; o < spots[i].length; o++){
+                winCheckSet.add(spots[o][i])   
+            }
+            if (winCheckSet.size === 1 && !winCheckSet.has('')) {
+                console.log('Game won by columns')
+                GameFlow.endGame(spots[0][i]); //returns win and player id
+                return
+            }  
         }
-        if (mySet.size === 1 && !mySet.has('')) {
+        //CHECK DIAGONALS
+        winCheckSet.clear();
+        for (let i = 0; i < spots.length; i++) { 
+            winCheckSet.add(spots[i][i])
+        }
+        if (winCheckSet.size === 1 && !winCheckSet.has('')) {
             console.log('Game won by diagonals')
             GameFlow.endGame(spots[0][0]); //returns win and player id
             return
         }
         //INVERSE DIAGONALS
-        mySet.clear();
+        winCheckSet.clear();
         for (let i = 0; i < spots.length; i++) { 
-            mySet.add(spots[i][spots.length-i-1])
-            //console.log(mySet)
+            winCheckSet.add(spots[i][spots.length-i-1])
         }
-        if (mySet.size === 1 && !mySet.has('')) {
+        if (winCheckSet.size === 1 && !winCheckSet.has('')) {
             console.log('Game won by inverse diagonals')
             GameFlow.endGame(spots[0][spots.length-1]); //returns win and player id
             return
