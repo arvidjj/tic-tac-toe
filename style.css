@@ -6,6 +6,7 @@
     --secondary-color:white;
     --background-page: rgb(0, 0, 34);
     --background-game: rgb(31, 63, 153);
+    --glow: blue;
 
     --spot:purple;
     --light-spot: rgb(206, 101, 255);
@@ -20,6 +21,7 @@ body {
     font-family: 'Geomanist', 'Roboto', sans-serif;
 
     background-color: var(--background-page);
+    box-sizing: border-box;
 }
 
 .header {
@@ -32,6 +34,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .fullscreen-container {
@@ -56,11 +59,12 @@ main {
 }
 
 #gameBoard {
-    background-color: var(--background-game);
+    background-color: white;
     border: 1px solid black;
     border-radius: 12px;
     width:500px;
     height: 500px;
+    gap: 10px;
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -76,12 +80,53 @@ main {
 
     cursor: pointer;
     font-size: 5rem;
-    box-shadow: 0px 0px 7px 2px blue, inset 0px 0px 7px 2px blue;
-    background-color: gray;
+    background-color: var(--spot);
 
     transition: 0.3s;
 }
 
+.spot:nth-child(1)  {
+    box-shadow:0px -10px 5px -5px inset var(--glow),  
+    -10px 0px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(2)  {
+    box-shadow:10px 0px 5px -5px inset var(--glow),
+    -10px 0px 5px -5px inset var(--glow),
+    0px -10px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(3) {
+    box-shadow:0px -10px 5px -5px inset var(--glow),  
+    10px 0px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(4)  {
+    box-shadow:0px -10px 5px -5px inset var(--glow),  
+    0px 10px 5px -5px inset var(--glow),
+    -10px 0px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(6)  {
+    box-shadow:0px -10px 5px -5px inset var(--glow),  
+    0px 10px 5px -5px inset var(--glow),
+    10px 0px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(5)  {
+    box-shadow:0px -10px 5px -5px inset var(--glow),  
+    0px 10px 5px -5px inset var(--glow),
+    10px 0px 5px -5px inset var(--glow),
+    -10px 0px 5px -5px inset var(--glow); 
+}
+.spot:nth-child(7)  {
+    box-shadow:0px 10px 5px -5px inset var(--glow),  
+    -10px 0px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(8)  {
+    box-shadow:10px 0px 5px -5px inset var(--glow),
+    -10px 0px 5px -5px inset var(--glow),
+    0px 10px 5px -5px inset var(--glow);  
+}
+.spot:nth-child(9) {
+    box-shadow:0px 10px 5px -5px inset var(--glow),  
+    10px 0px 5px -5px inset var(--glow);  
+}
 .spot:hover {
     transform: scale(1.08);
     background-color: var(--light-spot);
@@ -89,7 +134,7 @@ main {
 }
 
 .spot img {
-    height: 150px;
+    height: 130px;
     width: auto;
 }
 
@@ -103,6 +148,11 @@ main {
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     transition: 0.3s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
 }
 .popUp.active {
     transform: translate(-50%, -50%) scale(1);
@@ -118,5 +168,5 @@ main {
 }
 
 #warningScreen {
-    
+    transition: 0.1s ease-in-out;
 }

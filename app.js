@@ -1,9 +1,12 @@
 
 const GameFlow = (() => {
     const endGameScreen = document.querySelector('#endGameScreen');
+    const endMessage = document.querySelector('#endMessage');
+    const backEndButton = document.querySelector('#backEndButton')
     const warningScreen = document.querySelector('#warningScreen');
     const warningMessage = document.querySelector('#warningMessage');
     const backWarningButton = document.querySelector('#backWarningButton')
+
     const fullScreenContainer = document.querySelector('#fsContainer');
 
     const gameStartForm = document.querySelector('form');
@@ -18,6 +21,10 @@ const GameFlow = (() => {
     })
     backWarningButton.addEventListener('click', () => {
         warningScreen.classList.remove('active');
+        fullScreenContainer.classList.remove('active');
+    })
+    backEndButton.addEventListener('click', () => {
+        endGameScreen.classList.remove('active');
         fullScreenContainer.classList.remove('active');
     })
     const newGame = () => {
@@ -51,6 +58,7 @@ const GameFlow = (() => {
     const endGame = (result) => {
         if (result === 'tie') {
             console.log('Game Tie!')
+            endMessage.textContent = 'Game Tie!'
         } else {
             const victoriousPlayer = getPlayerById(result);
             players.forEach((player, index) => {
@@ -59,6 +67,7 @@ const GameFlow = (() => {
                 }
             })
             console.log(`${victoriousPlayer.name} won the game!`)
+            endMessage.textContent = `${victoriousPlayer.name} won the game!`
         }
         endGameScreen.classList.add('active');
         fullScreenContainer.classList.add('active');
