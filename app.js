@@ -168,8 +168,6 @@ const GameBoard = (() => {
                     if (!(gameBoard[rowIndex][columnIndex].classList.contains('taken'))) {
                         gameBoard[rowIndex][columnIndex].innerHTML = `<img src="${GameFlow.getPlayerById(spots[rowIndex][columnIndex]).getMarker()}">`
                         gameBoard[rowIndex][columnIndex].classList.add('taken')
-                    } else {
-                        console.log('It is TAKEN!')
                     }
                 } else {
                     gameBoard[rowIndex][columnIndex].innerHTML = ``

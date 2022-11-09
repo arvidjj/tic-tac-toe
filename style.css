@@ -194,7 +194,7 @@ form {
     10px 0px 5px -5px inset var(--glow);  
 }
 .spot:hover {
-    transform: scale(1.03);
+    transform: scale(1.04);
     background-color: var(--light-spot);
     z-index: 100;
 }
@@ -239,6 +239,16 @@ form {
 
 #endGameScreen {
    
+}
+
+.warningMessage {
+    display:flex;
+    align-items: center;
+    gap: 20px;
+}
+.warningMessage img {
+    height: 50px;
+    width:auto;
 }
 
 .endMessage {
