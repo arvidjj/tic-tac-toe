@@ -14,7 +14,6 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
     <link href="https://fonts.cdnfonts.com/css/geomanist" rel="stylesheet">
-    <script src="app.js" defer></script>
 </head>
 
 <body>
@@ -32,8 +31,16 @@
                     <input type="text" name="nameTwo" id="nameTwo">
                 </div>
 
-                <button type="submit">Start</button>
+                <div class="optionButtons">
+                    <button type="submit">Start</button>
+                    <button id="optionsBackButton">Back</button>
+                </div>
             </form>
+            <div class="playerScore disabled">
+                <p id="oneScore"></p>
+                <p id="twoScore"></p>
+            </div>
+            <button id="optionsButton" class="disabled">Options</button>
         </div>
         <div id="gameBoard">
 
@@ -59,6 +66,11 @@
             <h2 id="warningMessage"></h2>
             <button id="backWarningButton">Back</button>
         </div>
+        <script src="app.js"></script>
+        <script>
+            GameBoard.createBoard()
+            GameBoard.disableBoard();
+        </script>
     </main>
 </body>
 

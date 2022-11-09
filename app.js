@@ -1,5 +1,12 @@
 
 const GameFlow = (() => {
+    const optionsMenu = document.querySelector('.options');
+    const playerScore = document.querySelector('.playerScore');
+    const oneScore = document.querySelector('#oneScore')
+    const twoScore = document.querySelector('#twoScore')
+    const optionsButton = document.querySelector('#optionsButton');
+    const optionsBackButton = document.querySelector('#optionsBackButton');
+
     const endGameScreen = document.querySelector('#endGameScreen');
     const endMessage = document.querySelector('#endMessage');
     const backEndButton = document.querySelector('#backEndButton')
@@ -17,7 +24,14 @@ const GameFlow = (() => {
 
     gameStartForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        newGame();
+        newGame();    
+    })
+    optionsButton.addEventListener('click', () => {
+        enableOptionsMenu();
+    })
+    optionsBackButton.addEventListener('click', (event) => {
+        event.preventDefault()
+        enableScoreMenu();
     })
     backWarningButton.addEventListener('click', () => {
         warningScreen.classList.remove('active');
@@ -27,6 +41,20 @@ const GameFlow = (() => {
         endGameScreen.classList.remove('active');
         fullScreenContainer.classList.remove('active');
     })
+    const enableScoreMenu = () => {
+        gameStartForm.classList.add('disabled')
+        playerScore.classList.remove('disabled');
+        optionsButton.classList.remove('disabled');
+    }
+    const enableOptionsMenu = () => {
+        playerScore.classList.add('disabled');
+        optionsButton.classList.add('disabled');
+        gameStartForm.classList.remove('disabled')
+    }
+    const renderPlayerScore = () => {
+        oneScore.innerHTML = `(x) ${getPlayerById(0).name}: ${getPlayerById(0).getScore()} `
+        twoScore.innerHTML =`(o) ${getPlayerById(1).name}: ${getPlayerById(1).getScore()}`
+    }
     const newGame = () => {
         if (nameOne.value.length === 0 || nameTwo.value.length === 0) {
             warningMessage.textContent = 'You need to put the names!'
@@ -34,6 +62,7 @@ const GameFlow = (() => {
             fullScreenContainer.classList.add('active');
             return
         }
+        optionsBackButton.style.display = 'block';
         turn = 0;
         clearPlayers();
         const playerOne = Player(0, 'images/x.png');
@@ -43,6 +72,9 @@ const GameFlow = (() => {
         addPlayer(playerOne)
         addPlayer(playerTwo)
         GameBoard.restartBoard();
+        GameBoard.enableBoard();    
+        enableScoreMenu()
+        renderPlayerScore();
     }
     const getTurn = () => turn
     const changeTurns = () => {
@@ -56,6 +88,7 @@ const GameFlow = (() => {
         players.length = 0
     }
     const endGame = (result) => {
+        GameBoard.disableBoard();
         if (result === 'tie') {
             console.log('Game Tie!')
             endMessage.textContent = 'Game Tie!'
@@ -69,6 +102,7 @@ const GameFlow = (() => {
             console.log(`${victoriousPlayer.name} won the game!`)
             endMessage.textContent = `${victoriousPlayer.name} won the game!`
         }
+        renderPlayerScore()
         endGameScreen.classList.add('active');
         fullScreenContainer.classList.add('active');
     }
@@ -109,7 +143,11 @@ const GameBoard = (() => {
             row.forEach((column, columnIndex) => {
                 column.addEventListener('click', () => {
                     console.log(`clicked ${column.getAttribute('id')} index: ${rowIndex}-${columnIndex}`)
-                    addSpot(rowIndex, columnIndex, GameFlow.getPlayerByTurn().getId())
+                    if (column.classList.contains('disabled')) {
+                        console.log('Board is disabled')
+                    } else {
+                        addSpot(rowIndex, columnIndex, GameFlow.getPlayerByTurn().getId())
+                    }
                 })
             })
         })
@@ -151,7 +189,7 @@ const GameBoard = (() => {
         const winCheckSet = new Set(); //USE SETS TO CALCULATE WIN
         //CHECK ROWS
         spots.forEach(row => {
-            const winCheckSet = new Set(row); 
+            const winCheckSet = new Set(row);
             if (winCheckSet.size === 1 && row[0] !== '') {
                 console.log('Game won by rows')
                 GameFlow.endGame(row[0]); //returns win and player id
@@ -159,20 +197,20 @@ const GameBoard = (() => {
             }
         });
         //CHECK COLUMNS
-        for (let i = 0; i < spots.length; i++){ 
+        for (let i = 0; i < spots.length; i++) {
             winCheckSet.clear(); //clear win set to check next column
-            for (let o = 0; o < spots[i].length; o++){
-                winCheckSet.add(spots[o][i])   
+            for (let o = 0; o < spots[i].length; o++) {
+                winCheckSet.add(spots[o][i])
             }
             if (winCheckSet.size === 1 && !winCheckSet.has('')) {
                 console.log('Game won by columns')
                 GameFlow.endGame(spots[0][i]); //returns win and player id
                 return
-            }  
+            }
         }
         //CHECK DIAGONALS
         winCheckSet.clear();
-        for (let i = 0; i < spots.length; i++) { 
+        for (let i = 0; i < spots.length; i++) {
             winCheckSet.add(spots[i][i])
         }
         if (winCheckSet.size === 1 && !winCheckSet.has('')) {
@@ -182,12 +220,12 @@ const GameBoard = (() => {
         }
         //INVERSE DIAGONALS
         winCheckSet.clear();
-        for (let i = 0; i < spots.length; i++) { 
-            winCheckSet.add(spots[i][spots.length-i-1])
+        for (let i = 0; i < spots.length; i++) {
+            winCheckSet.add(spots[i][spots.length - i - 1])
         }
         if (winCheckSet.size === 1 && !winCheckSet.has('')) {
             console.log('Game won by inverse diagonals')
-            GameFlow.endGame(spots[0][spots.length-1]); //returns win and player id
+            GameFlow.endGame(spots[0][spots.length - 1]); //returns win and player id
             return
         }
         //TIE CHECK
@@ -197,15 +235,26 @@ const GameBoard = (() => {
             return
         }
     }
-    const disableBoard = () =>{
-        
+    const disableBoard = () => { //DISABLED BOARD
+        spots.forEach((row, rowIndex) => {
+            row.forEach((column, columnIndex) => {
+                gameBoard[rowIndex][columnIndex].classList.add('disabled')
+            })
+        })
+    }
+    const enableBoard = () => { //ENABLE BOARD
+        spots.forEach((row, rowIndex) => {
+            row.forEach((column, columnIndex) => {
+                gameBoard[rowIndex][columnIndex].classList.remove('disabled')
+            })
+        })
     }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
     return {
         createBoard,
         addSpot, render, getGameBoard, getSpots, restartBoard,
-        checkWin
+        checkWin, disableBoard, enableBoard
     }
 })()
 
@@ -219,7 +268,7 @@ const Player = (id, marker) => {
         this.score = value;
     }
     const addScore = () => {
-        this.score += 1;
+        score += 1;
     }
 
     const placeMarker = () => {
@@ -235,12 +284,5 @@ const Player = (id, marker) => {
     }
 };
 
-const playerOne = Player(0, 'images/x.png');
-playerOne.name = 'Will'
-const playerTwo = Player(1, 'images/o.png');
-playerTwo.name = 'Leonard'
-GameFlow.addPlayer(playerOne)
-GameFlow.addPlayer(playerTwo)
 
-GameBoard.createBoard()
 //GameBoard.render();
