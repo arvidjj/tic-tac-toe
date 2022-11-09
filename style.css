@@ -85,7 +85,7 @@ main {
     position: relative;
 }
 
-#optionsButton {
+.playingButtons {
     transition: all 1s ease-in;
     position:absolute;
     transition: 0.4s;

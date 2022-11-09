@@ -1,12 +1,16 @@
 
 const GameFlow = (() => {
     const optionsMenu = document.querySelector('.options');
+    const optionsBackButton = document.querySelector('#optionsBackButton');
+
     const playerScore = document.querySelector('.playerScore');
     const oneScore = document.querySelector('#oneScore')
     const twoScore = document.querySelector('#twoScore')
+    
+    const playingButtons = document.querySelector('.playingButtons');
     const optionsButton = document.querySelector('#optionsButton');
-    const optionsBackButton = document.querySelector('#optionsBackButton');
-
+    const restartButton = document.querySelector('#restartButton');
+    
     const endGameScreen = document.querySelector('#endGameScreen');
     const endMessage = document.querySelector('#endMessage');
     const backEndButton = document.querySelector('#backEndButton')
@@ -29,6 +33,10 @@ const GameFlow = (() => {
     optionsButton.addEventListener('click', () => {
         enableOptionsMenu();
     })
+    restartButton.addEventListener('click', () => {
+        GameBoard.restartBoard();
+        GameBoard.enableBoard();  
+    })
     optionsBackButton.addEventListener('click', (event) => {
         event.preventDefault()
         enableScoreMenu();
@@ -44,11 +52,11 @@ const GameFlow = (() => {
     const enableScoreMenu = () => {
         gameStartForm.classList.add('disabled')
         playerScore.classList.remove('disabled');
-        optionsButton.classList.remove('disabled');
+        playingButtons.classList.remove('disabled');
     }
     const enableOptionsMenu = () => {
         playerScore.classList.add('disabled');
-        optionsButton.classList.add('disabled');
+        playingButtons.classList.add('disabled');
         gameStartForm.classList.remove('disabled')
     }
     const renderPlayerScore = () => {
