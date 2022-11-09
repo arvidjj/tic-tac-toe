@@ -6,11 +6,11 @@ const GameFlow = (() => {
     const playerScore = document.querySelector('.playerScore');
     const oneScore = document.querySelector('#oneScore')
     const twoScore = document.querySelector('#twoScore')
-    
+
     const playingButtons = document.querySelector('.playingButtons');
     const optionsButton = document.querySelector('#optionsButton');
     const restartButton = document.querySelector('#restartButton');
-    
+
     const endGameScreen = document.querySelector('#endGameScreen');
     const endMessage = document.querySelector('#endMessage');
     const backEndButton = document.querySelector('#backEndButton')
@@ -28,14 +28,14 @@ const GameFlow = (() => {
 
     gameStartForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        newGame();    
+        newGame();
     })
     optionsButton.addEventListener('click', () => {
         enableOptionsMenu();
     })
     restartButton.addEventListener('click', () => {
         GameBoard.restartBoard();
-        GameBoard.enableBoard();  
+        GameBoard.enableBoard();
     })
     optionsBackButton.addEventListener('click', (event) => {
         event.preventDefault()
@@ -61,7 +61,7 @@ const GameFlow = (() => {
     }
     const renderPlayerScore = () => {
         oneScore.innerHTML = `(x) ${getPlayerById(0).name}: ${getPlayerById(0).getScore()} `
-        twoScore.innerHTML =`(o) ${getPlayerById(1).name}: ${getPlayerById(1).getScore()}`
+        twoScore.innerHTML = `(o) ${getPlayerById(1).name}: ${getPlayerById(1).getScore()}`
     }
     const newGame = () => {
         if (nameOne.value.length === 0 || nameTwo.value.length === 0) {
@@ -80,7 +80,7 @@ const GameFlow = (() => {
         addPlayer(playerOne)
         addPlayer(playerTwo)
         GameBoard.restartBoard();
-        GameBoard.enableBoard();    
+        GameBoard.enableBoard();
         enableScoreMenu()
         renderPlayerScore();
     }
@@ -165,9 +165,15 @@ const GameBoard = (() => {
         spots.forEach((row, rowIndex) => {
             row.forEach((column, columnIndex) => {
                 if (column !== '') {
-                    gameBoard[rowIndex][columnIndex].innerHTML = `<img src="${GameFlow.getPlayerById(spots[rowIndex][columnIndex]).getMarker()}">`
+                    if (!(gameBoard[rowIndex][columnIndex].classList.contains('taken'))) {
+                        gameBoard[rowIndex][columnIndex].innerHTML = `<img src="${GameFlow.getPlayerById(spots[rowIndex][columnIndex]).getMarker()}">`
+                        gameBoard[rowIndex][columnIndex].classList.add('taken')
+                    } else {
+                        console.log('It is TAKEN!')
+                    }
                 } else {
                     gameBoard[rowIndex][columnIndex].innerHTML = ``
+                    gameBoard[rowIndex][columnIndex].classList.remove('taken')
                 }
             })
         })
