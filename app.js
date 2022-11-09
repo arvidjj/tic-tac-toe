@@ -197,6 +197,9 @@ const GameBoard = (() => {
             return
         }
     }
+    const disableBoard = () =>{
+        
+    }
     const getGameBoard = () => gameBoard
     const getSpots = () => spots
     return {

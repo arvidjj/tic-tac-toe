@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'PressStart2P';
+    font-style: normal;
+    font-weight: normal;
+    src: local('PressStart2P'), url('resources/PressStart2P.woff') format('woff');
+}
+
 :root {
     --main-color: violet;
     --darker-main-color: rgb(58, 13, 58);
@@ -6,9 +13,9 @@
     --secondary-color:white;
     --background-page: rgb(0, 0, 34);
     --background-game: rgb(31, 63, 153);
-    --glow: blue;
+    --glow: rgb(46, 46, 255);
 
-    --spot:purple;
+    --spot:rgb(0, 0, 27);
     --light-spot: rgb(206, 101, 255);
 }
 
@@ -18,7 +25,7 @@ body {
     display:flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'Geomanist', 'Roboto', sans-serif;
+    font-family: 'PressStart2P', 'Geomanist', 'Roboto', sans-serif;
 
     background-color: var(--background-page);
     box-sizing: border-box;
@@ -30,11 +37,25 @@ body {
     letter-spacing: 5px;
 }
 
+h1 {
+    margin: 0;
+}
+
+button {
+    background-color: var(--main-color);
+}
+
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    
+    background-color: var(--background-game);
+    box-shadow:0px 0px 6px 5px black;
+    padding: 2.5rem;
+    border-radius: 16px;
+    border: 0.5rem solid var(--darker-main-color);
 }
 
 .fullscreen-container {
@@ -58,8 +79,20 @@ main {
     background-color: var(--background-game);
 }
 
+form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nameInputs {
+    display:flex;
+    flex-direction: column;
+    gap: 0.5rem
+}
+
 #gameBoard {
-    background-color: white;
+    background-color: blue;
     border: 1px solid black;
     border-radius: 12px;
     width:500px;
@@ -128,7 +161,7 @@ main {
     10px 0px 5px -5px inset var(--glow);  
 }
 .spot:hover {
-    transform: scale(1.08);
+    transform: scale(1.03);
     background-color: var(--light-spot);
     z-index: 100;
 }
